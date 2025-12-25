@@ -2,8 +2,8 @@ from app.services.docker import DockerService
 
 
 def interactive_run():
-    print("Docker\nВыберите действие:")
-    user_input = str(input("Выход - 0\nУстановить - 1\nУдалить - 2\n"))
+    print("Docker manager\nВыберите действие:")
+    user_input = str(input("0 - Выход\n1 - Установить\n2 - Удалить\nВыбор:"))
     docker = DockerService()
     match user_input:
         case "0":

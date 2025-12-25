@@ -2,8 +2,12 @@ from app.interfaces.interactive import bbr, docker, fail2ban, uv
 
 
 def run_interactive_script():
-    print("Добро пожаловать в deb_scripts!\nВыберите скрипт:")
-    user_input = str(input("Выход - 0\nBBR - 1\nDocker - 2\nFail2Ban - 3\nUV - 4\n"))
+    user_input = str(
+        input(
+            "Выберите скрипт:\n0 - Выход\n1 - BBR\n2 - Docker\n3 - Fail2Ban\n4 - UV\nВыбор:"
+        )
+    )
+
     match user_input:
         case "0":
             exit()

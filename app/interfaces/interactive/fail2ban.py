@@ -2,8 +2,8 @@ from app.services.fail2ban import Fail2BanService
 
 
 def interactive_run():
-    print("Fail2Ban\nВыберете действие:")
-    user_input = str(input("Выход - 0\nУстановить - 1\nУдалить - 2\n"))
+    print("Fail2Ban manager\nВыберете действие:")
+    user_input = str(input("0 - Выход\n1 - Установить\n2 - Удалить\nВыбор:"))
     fail2ban = Fail2BanService()
     match user_input:
         case "0":

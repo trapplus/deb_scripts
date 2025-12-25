@@ -2,12 +2,12 @@ from app.services.uv import UVService
 
 
 def interactive_run():
-    print("UV\nВыберите действие:")
-    user_input = str(input("Выход - 0\nУстановить - 1\nУдалить - 2\n"))
+    print("UV manager\nВыберите действие:")
+    user_input = str(input("0 - Выход\n1 - Установить\n2 - Удалить\nВыбор:"))
     app = UVService()
     match user_input:
         case "0":
-            from app.run import run_interactive_script
+            from app.interfaces.interactive.run import run_interactive_script
 
             run_interactive_script()
         case "1":

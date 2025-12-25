@@ -2,8 +2,8 @@ from app.services.bbr import BBRService
 
 
 def interactive_run():
-    print("BBR\nВыберите действие:")
-    user_input = str(input("Выход - 0\nВключить - 1\nВыключить - 2\n"))
+    print("BBR manager\nВыберите действие:")
+    user_input = str(input(" 0 - Выход\n1 - Включить\n2 - Выключить\nВыбор:"))
     bbr = BBRService()
     match user_input:
         case "0":
