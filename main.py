@@ -1,8 +1,11 @@
-from app.interfaces.interactive.run import run_interactive_script
-
+from app.interfaces.cli.run import interactiveCLI
 
 def main():
-    run_interactive_script()
+    global cli
+
+    cli_global = interactiveCLI()
+
+    cli_global.run_interactive_script()
 
 
 if __name__ == "__main__":
