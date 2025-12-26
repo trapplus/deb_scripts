@@ -10,8 +10,7 @@ class DockerService:
     def install(self):
         run_commands(
             [
-                ["apt", "update"],
-                ["apt", "install", "-y", "curl"],
+                ["pacman", "-Syu", "--noconfirm", "curl"],
                 ["curl", "-fsSL", "https://get.docker.com", "-o", "get-docker.sh"],
                 ["sh", "./get-docker.sh"],
                 ["rm", "./get-docker.sh"],

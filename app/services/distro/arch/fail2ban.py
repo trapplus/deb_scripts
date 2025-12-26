@@ -19,7 +19,7 @@ findtime = 1h
 """
 
     def install(self):
-        run_commands([["apt", "install", "fail2ban", "-y"]])
+        run_commands([["pacman", "-Sy" , "--noconfirm", "fail2ban"]])
 
         with open(self.path_to_jail_config, "w") as f:
             f.write(self.jail_str_config)
@@ -64,7 +64,7 @@ findtime = 1h
             [
                 ["systemctl", "status", "fail2ban"],
                 ["fail2ban-client", "status", "sshd"],
-                ["apt", "remove", "fail2ban", "-y"],
+                ["pacman", "-Rns", "--noconfirm", "fail2ban"],
                 ["rm", "-f", self.path_to_jail_config],
             ]
         )

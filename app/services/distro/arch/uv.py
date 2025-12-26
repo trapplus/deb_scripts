@@ -10,8 +10,7 @@ class UVService:
     def install(self):
         run_commands(
             [
-                ["apt", "update"],
-                ["apt", "install", "-y", "curl"],
+                ["pacman", "-Syu", "--noconfirm", "curl"],
                 [
                     "curl",
                     "-LsSf",
@@ -21,7 +20,7 @@ class UVService:
                 ],
                 ["sh", "./uv_install.sh"],
                 ["bash", "-c", f'source "{self.home_path}/.local/bin/env"'],
-                ["rm", "./uv_install.sh"],
+                ["rm", "-f", "./uv_install.sh"],
             ]
         )
 

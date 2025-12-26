@@ -1,45 +1,12 @@
-import time
+from app.utils import sysinfo_utils
 
-from app.utils.subprocess_utils import run_commands
+__os: str | None = sysinfo_utils.defect_distro().lower()
 
-
-class BBRService:
-    def __init__(self):
-        self.path_to_sysctl_config = "/etc/sysctl.conf"
-        self.bbr_config = """
-net.core.default_qdisc=fq_codel
-net.ipv4.tcp_congestion_control=bbr
-"""
-
-    def enable(self):
-        with open(self.path_to_sysctl_config, "a") as f:
-            f.write(self.bbr_config)
-
-        run_commands([["sysctl", "-p"]])
-        time.sleep(1)
-        run_commands(
-            [
-                ["sysctl", "net.ipv4.tcp_congestion_control"],
-                ["sysctl", "net.core.default_qdisc"],
-            ]
-        )
-
-    def disable(self):
-        with open(self.path_to_sysctl_config, "r") as f:
-            lines = f.readlines()
-            for line in lines:
-                if line.startswith(
-                    "net.ipv4.tcp_congestion_control"
-                ) or line.startswith("net.core.default_qdisc"):
-                    lines.remove(line)
-            with open(self.path_to_sysctl_config, "w") as f:
-                f.writelines(lines)
-
-        run_commands(
-            [
-                ["sysctl", "net.ipv4.tcp_congestion_control=cubic"],
-                ["sysctl", "net.core.default_qdisc=fq_codel"],
-                ["sysctl", "net.ipv4.tcp_congestion_control"],
-                ["sysctl", "net.core.default_qdisc"],
-            ]
-        )
+if __os == "debian":
+    from app.services.distro.debian.bbr import BBRService
+elif __os == "arch":
+    from app.services.distro.arch.bbr import BBRService
+elif __os == "openwrt":  # TODO
+    from app.services.distro.wrt.bbr import BBRService
+else:
+    raise OSError("Unsuported distro!")

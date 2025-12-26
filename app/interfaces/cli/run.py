@@ -20,6 +20,7 @@ class interactiveCLI:
                 "Выберите скрипт:\n0 - Выход\n1 - BBR\n2 - Docker\n3 - Fail2Ban\n4 - UV\nВыбор:"
             )
         )
+        
         match user_input:
             case "0":
                 exit()
@@ -37,7 +38,7 @@ class interactiveCLI:
 
     def bbr_interactive_run(self):
         print("BBR manager\nВыберите действие:")
-        user_input = str(input(" 0 - Выход\n1 - Включить\n2 - Выключить\nВыбор:"))
+        user_input = str(input("0 - Выход\n1 - Включить\n2 - Выключить\nВыбор:"))
         match user_input:
             case "0":
                 self.run_interactive_script()

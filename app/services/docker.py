@@ -1,39 +1,12 @@
-from shutil import which
+from app.utils import sysinfo_utils
 
-from app.utils.subprocess_utils import run_commands
+__os: str | None = sysinfo_utils.defect_distro().lower()
 
-
-class DockerService:
-    def __init__(self) -> None:
-        self.status: bool = True if which("docker") else False
-
-    def install(self):
-        run_commands(
-            [
-                ["apt", "update"],
-                ["apt", "install", "-y", "curl"],
-                ["curl", "-fsSL", "https://get.docker.com", "-o", "get-docker.sh"],
-                ["sh", "./get-docker.sh"],
-                ["rm", "./get-docker.sh"],
-            ]
-        )
-
-    def uninstall(self):
-        run_commands(
-            [
-                [
-                    "apt",
-                    "purge",
-                    "docker-ce",
-                    "docker-ce-cli",
-                    "containerd.io",
-                    "docker-buildx-plugin",
-                    "docker-compose-plugin",
-                    "docker-ce-rootless-extras",
-                ],
-                ["rm", "-rf", "/var/lib/docker"],
-                ["rm", "-rf", "/var/lib/containerd"],
-                ["rm", "/etc/apt/sources.list.d/docker.list"],
-                ["rm", "/etc/apt/keyrings/docker.asc"],
-            ]
-        )
+if __os == "debian":
+    from app.services.distro.debian.docker import DockerService
+elif __os == "arch":
+    from app.services.distro.arch.docker import DockerService
+elif __os == "openwrt":  # TODO
+    from app.services.distro.wrt.docker import DockerService
+else:
+    raise OSError("Unsuported distro!")
