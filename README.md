@@ -28,7 +28,7 @@
 
 ### Установка и запуск
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trapplus/deb_scripts/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/trapplus/deb_scripts/master/install.sh | bash
 ```
 
 ---
