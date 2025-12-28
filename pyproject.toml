@@ -8,6 +8,7 @@ dependencies = []
 
 [tool.pylint.messages_control]
 disable = [
+    "duplicate-code",
     "missing-module-docstring",
     "missing-class-docstring", 
     "missing-function-docstring",
@@ -34,7 +35,7 @@ max-args = 10
 max-locals = 20
 max-branches = 15
 
-[dependency-groups]
-dev = [
-    "pylint>=4.0.4",
-]
+[tool.pylint.similarities]
+# Ignore duplicate code warnings (common in multi-distro implementations)
+min-similarity-lines = 10
+ignore-imports = true
