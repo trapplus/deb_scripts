@@ -10,7 +10,7 @@ dependencies = []
 disable = [
     "duplicate-code",
     "missing-module-docstring",
-    "missing-class-docstring", 
+    "missing-class-docstring",
     "missing-function-docstring",
     "too-few-public-methods",
     "invalid-name",
@@ -36,7 +36,6 @@ max-locals = 20
 max-branches = 15
 
 [tool.pylint.similarities]
-# Ignore duplicate code warnings (common in multi-distro implementations)
 min-similarity-lines = 10
 ignore-imports = true
 
