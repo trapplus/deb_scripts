@@ -1,25 +1,25 @@
 import time
 from subprocess import run
+
 from app.utils.subprocess_utils import run_commands
 
 
 class Fail2BanService:
     def __init__(self):
-
         self.path_to_jail_config = "/etc/fail2ban/jail.d/sshd.local"
         self.jail_str_config = """
-[sshd]
-enabled = true
-backend = systemd
-journalmatch = _SYSTEMD_UNIT=ssh.service
-maxretry = 5
-port = ssh
-bantime = 1d
-findtime = 1h
-"""
+            [sshd]
+            enabled = true
+            backend = systemd
+            journalmatch = _SYSTEMD_UNIT=sshd.service
+            maxretry = 5
+            port = ssh
+            bantime = 1d
+            findtime = 1h
+            """
 
     def install(self):
-        run_commands([["pacman", "-Sy" , "--noconfirm", "fail2ban"]])
+        run_commands([["pacman", "-Sy", "--noconfirm", "fail2ban"]])
 
         with open(self.path_to_jail_config, "w") as f:
             f.write(self.jail_str_config)

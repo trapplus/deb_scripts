@@ -11,8 +11,9 @@
 
 ## 🚀 Основные возможности
 
-- **Автоматизация настройки сервера**: BBR, Fail2Ban и другие оптимизации
+- **Автоматизация настройки сервера**: BBR, Fail2Ban, Docker и другие оптимизации
 - **DEB**: поддержка Debian, Ubuntu и производных дистрибутивов
+- **ARCH**: поддержка Arch и производных дистрибутивов
 - **Экосистема инструментов**:
   - ✅ UV для управления зависимостями
 
@@ -25,45 +26,9 @@
 - Git
 - POSIX-совместимая оболочка (bash/zsh)
 
-### Установка
+### Установка и запуск
 ```bash
-git clone https://github.com/thegrayfoxxx/deb_scripts.git
-cd deb_scripts
-```
-
----
-
-## 📦 Управление зависимостями
-
-### Рекомендуемый способ (с UV)
-```bash
-# Создание виртуального окружения, его активация и установка зависимостей из lock-файла
-uv sync
-```
-
-### Альтернативный способ (с PIP)
-```bash
-# Создать виртуальное окружение
-python -m venv .venv
-source .venv/bin/activate
-
-# Установить зависимости (требуется предварительная генерация requirements.txt)
-uv pip compile -o requirements.txt  # генерируем из pyproject.toml
-pip install -r requirements.txt
-```
-
----
-
-## 🖥️ Запуск
-
-### Запуск с помощью UV
-```bash
-uv run main.py
-```
-
-### Запуск с помощью Python
-```bash
-python3 main.py
+curl -fsSL https://raw.githubusercontent.com/trapplus/deb_scripts/main/install.sh | bash
 ```
 
 ---
@@ -71,36 +36,57 @@ python3 main.py
 ## 📂 Структура проекта
 ```
 deb_scripts/
-├── app/                              # Основные модули приложения
-│   ├── interfaces/                   # Интерфейсы пользователя
-│   │   └── interactive/              # Интерактивный CLI
-│   │       ├── bbr.py                # Интерфейс управления BBR
-│   │       ├── docker.py             # Интерфейс управления Docker
-│   │       ├── fail2ban.py           # Интерфейс управления Fail2ban
-│   │       ├── uv.py                 # Интерфейс управления uv
-│   │       └── run.py                # Главный интерактивный интерфейс
-│   ├── services/                     # Бизнес-логика сервисов
-│   │   ├── bbr.py                    # Управление сетевыми параметрами
-│   │   ├── docker.py                 # Установка и настройка Docker
-│   │   ├── fail2ban.py               # Конфигурация системы безопасности
-│   │   └── uv.py                     # Установка и настройка uv
-│   └── utils/                        # Утилиты и вспомогательные функции
-│       └── subprocess_utils.py       # Вспомогательные функции для subprocess
-├── .gitignore                        # Игнорируемые файлы и директории
-├── .python-version                   # Рекомендуемая версия Python
-├── LICENSE                           # Лицензия проекта
-├── main.py                           # Точка входа в приложение
-├── pyproject.toml                    # Конфигурация проекта и зависимостей
-├── uv.lock                           # Lockfile зависимостей uv
-└── README.md                         # Эта документация
+deb_scripts/
+├── app/
+│   ├── interfaces/
+│   │   ├── api/                    # API интерфейс (в разработке)
+│   │   └── cli/                    # CLI интерфейс
+│   │       └── run.py              # Точка входа CLI
+│   │
+│   ├── services/                   # Бизнес-логика сервисов
+│   │   ├── bbr.py                  # Сервис BBR конгестии
+│   │   ├── docker.py               # Сервис Docker
+│   │   ├── fail2ban.py             # Сервис Fail2Ban
+│   │   │
+│   │   └── distro/                 # Реализации для дистрибутивов
+│   │       ├── arch/               # Arch Linux
+│   │       │   ├── bbr.py
+│   │       │   ├── docker.py
+│   │       │   └── fail2ban.py
+│   │       │
+│   │       ├── debian/             # Debian/Ubuntu
+│   │       │   ├── bbr.py
+│   │       │   ├── docker.py
+│   │       │   └── fail2ban.py
+│   │       │
+│   │       └── wrt/                # OpenWrt
+│   │           ├── bbr.py
+│   │           ├── docker.py
+│   │           └── fail2ban.py
+│   │
+│   └── utils/                      # Утилиты
+│       ├── __init__.py
+│       ├── subprocess_utils.py     # Работа с процессами
+│       └── sysinfo_utils.py        # Информация о системе
+│
+├── main.py                         # Главная точка входа
+├── pyproject.toml                  # Конфигурация проекта (uv)
+├── uv.lock                         # Lockfile зависимостей
+├── install.sh                      # Установочный скрипт
+├── README.md                       # Документация
+└── LICENSE                         # Лицензия
 ```
 ---
 
 ## 🗓️ Планы
+### Выполнено:
+1. Поддержка Arch Linux и ее производных.
 
-1. Реализовать поддержку для Arch-подобных систем (Далее поддержка систем OpenWrt и ее производных).
+
+### В выполнения
+1. Реализовать поддержку для OpenWrt и ее производных, Alpine, .
 2. Улучшение CLI-Интерфейса для более приятного UX.
-3. Дополнительный функционал включающий в себя такие скрипты для установки 3X-UI, Zapret и podkop.
+3. Дополнительный функционал включающий в себя такие скрипты для установки 3X-UI, Zapret и podkop для OpenWrt.
 
 ---
 ## ⚠️ Безопасность
@@ -111,4 +97,6 @@ deb_scripts/
 
 ## 📜 Лицензия
 
-MIT License © 2025 thegrayfoxxx
+MIT License © 2025 thegrayfoxxx - original
+
+MIT License © 2025 trapplus - forked
