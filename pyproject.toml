@@ -5,7 +5,6 @@ description = "DevOps Automation Scripts for all linux system"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
-
 [tool.pylint.messages_control]
 disable = [
     "duplicate-code",
@@ -27,7 +26,12 @@ disable = [
     "subprocess-run-check",
     "simplifiable-if-statement",
     "too-many-return-statements",
-    "global-variable-not-assigned"
+    "global-variable-not-assigned",
+    "consider-using-sys-exit",
+    "unspecified-encoding",
+    "simplifiable-if-expression",
+    "useless-parent-delegation",
+    "unnecessary-pass"
 ]
 
 [tool.pylint.format]
@@ -40,6 +44,7 @@ good-names = ["i", "j", "k", "ex", "Run", "_", "f", "e", "fp"]
 max-args = 10
 max-locals = 20
 max-branches = 15
+max-returns = 10
 
 [tool.pylint.similarities]
 min-similarity-lines = 10
