@@ -49,65 +49,87 @@ check_command() {
 }
 
 install_uv() {
-    print_step "Проверка uv..."
+    print_step "Checking uv installation..."
 
     if check_command uv; then
-        print_success "uv уже установлен"
+        print_success "uv already installed"
         return 0
     fi
 
-    print_step "Установка uv..."
+    print_step "Installing uv..."
     if curl -fsSL "$UV_INSTALL_URL" | sh; then
-        print_success "uv успешно установлен"
-
+        print_success "uv successfully installed"
         export PATH="$HOME/.cargo/bin:$PATH"
-
         return 0
     else
-        print_error "Не удалось установить uv"
+        print_error "Failed to install uv"
         return 1
     fi
 }
 
-clone_repository() {
-    print_step "Клонирование репозитория..."
-
+setup_repository() {
     if [ -d "$INSTALL_DIR" ]; then
-        print_info "Директория $INSTALL_DIR уже существует"
-        read -p "$(echo -e ${YELLOW}Удалить и переустановить? [y/N]:${NC} )" -n 1 -r
+        print_info "Repository already exists at $INSTALL_DIR"
+        read -p "$(echo -e ${YELLOW}Update scripts? [Y/n]:${NC} )" -n 1 -r
         echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            rm -rf "$INSTALL_DIR"
-        else
-            print_info "Пропускаем клонирование"
+
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            print_info "Skipping update, using existing version"
             return 0
         fi
-    fi
 
-    if ! check_command git; then
-        print_error "Git не установлен. Установи git и попробуй снова"
-        exit 1
-    fi
+        print_step "Updating repository..."
+        cd "$INSTALL_DIR"
 
-    if git clone "$REPO_URL" "$INSTALL_DIR"; then
-        print_success "Репозиторий склонирован в $INSTALL_DIR"
+        if git pull origin master; then
+            print_success "Repository updated successfully"
+            return 0
+        else
+            print_error "Failed to update repository"
+            return 1
+        fi
+    else
+        print_step "Cloning repository..."
+
+        if ! check_command git; then
+            print_error "Git is not installed. Please install git and try again"
+            exit 1
+        fi
+
+        if git clone "$REPO_URL" "$INSTALL_DIR"; then
+            print_success "Repository cloned to $INSTALL_DIR"
+            return 0
+        else
+            print_error "Failed to clone repository"
+            return 1
+        fi
+    fi
+}
+
+install_dependencies() {
+    print_step "Installing dependencies..."
+
+    cd "$INSTALL_DIR"
+
+    if uv sync; then
+        print_success "Dependencies installed successfully"
         return 0
     else
-        print_error "Не удалось склонировать репозиторий"
+        print_error "Failed to install dependencies"
         return 1
     fi
 }
 
 run_script() {
-    print_step "Запуск скрипта..."
+    print_step "Running script..."
 
     cd "$INSTALL_DIR"
 
     if uv run main.py; then
-        print_success "Скрипт выполнен успешно"
+        print_success "Script executed successfully"
         return 0
     else
-        print_error "Ошибка при выполнении скрипта"
+        print_error "Error executing script"
         return 1
     fi
 }
@@ -115,21 +137,19 @@ run_script() {
 print_manual_run() {
     echo
     echo -e "${CYAN}${BOLD}════════════════════════════════════════${NC}"
-    echo -e "${GREEN}${BOLD}   Установка завершена!${NC}"
+    echo -e "${GREEN}${BOLD}   Installation completed!${NC}"
     echo -e "${CYAN}${BOLD}════════════════════════════════════════${NC}"
     echo
-    echo -e "${BOLD}Для запуска скрипта выполни:${NC}"
+    echo -e "${BOLD}To run the script execute:${NC}"
     echo
     echo -e "  ${MAGENTA}cd $INSTALL_DIR && uv run main.py${NC}"
     echo
-    echo -e "${YELLOW}💡 Совет:${NC} Добавь алиас в ~/.bashrc или ~/.zshrc:"
+    echo -e "${YELLOW}Tip:${NC} Add alias to ~/.bashrc or ~/.zshrc:"
     echo
     echo -e "  ${CYAN}alias deb='cd $INSTALL_DIR && uv run main.py'${NC}"
     echo
-    echo -e "${CYAN}${BOLD}════════════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}${BOLD}════════════════════════════════════════${NC}"
 }
-
-# methods
 
 main() {
     clear
@@ -141,13 +161,19 @@ main() {
 
     echo
 
-    if ! clone_repository; then
+    if ! setup_repository; then
         exit 1
     fi
 
     echo
 
-    read -p "$(echo -e ${GREEN}${BOLD}Запустить скрипт сейчас? [Y/n]:${NC} )" -n 1 -r
+    if ! install_dependencies; then
+        exit 1
+    fi
+
+    echo
+
+    read -p "$(echo -e ${GREEN}${BOLD}Run script now? [Y/n]:${NC} )" -n 1 -r
     echo
     echo
 
@@ -156,9 +182,9 @@ main() {
     else
         if run_script; then
             echo
-            print_success "Готово!"
+            print_success "Done!"
             echo
-            print_info "Для повторного запуска используй:"
+            print_info "To run again use:"
             echo -e "  ${MAGENTA}cd $INSTALL_DIR && uv run main.py${NC}"
             echo
         else
@@ -169,8 +195,8 @@ main() {
 
     if [[ ! ":$PATH:" == *":$HOME/.cargo/bin:"* ]]; then
         echo
-        print_info "Возможно, потребуется перезагрузить shell или выполнить:"
-        echo -e "  ${CYAN}source ~/.bashrc${NC}  ${YELLOW}# или${NC}  ${CYAN}source ~/.zshrc${NC}"
+        print_info "You may need to reload shell or run:"
+        echo -e "  ${CYAN}source ~/.bashrc${NC}  ${YELLOW}or${NC}  ${CYAN}source ~/.zshrc${NC}"
         echo
     fi
 }
