@@ -1,6 +1,6 @@
 from app.utils import sysinfo_utils
 
-__os: str | None = sysinfo_utils.defect_distro().lower()
+__os: str | None = sysinfo_utils.detect_distro().lower()
 
 if __os == "debian":
     from app.services.distro.debian.docker import DockerService
