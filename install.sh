@@ -70,6 +70,12 @@ install_uv() {
 setup_repository() {
     if [ -d "$INSTALL_DIR" ]; then
         print_info "Repository already exists at $INSTALL_DIR"
+        
+        # Redirect stdin to /dev/tty for read
+        if [ ! -t 0 ]; then
+            exec < /dev/tty
+        fi
+        
         read -p "$(echo -e ${YELLOW}Update scripts? [Y/n]:${NC} )" -n 1 -r
         echo
         
@@ -120,21 +126,7 @@ install_dependencies() {
     fi
 }
 
-run_script() {
-    print_step "Running script..."
-    
-    cd "$INSTALL_DIR"
-    
-    if uv run main.py; then
-        print_success "Script executed successfully"
-        return 0
-    else
-        print_error "Error executing script"
-        return 1
-    fi
-}
-
-print_manual_run() {
+print_final_message() {
     echo
     echo -e "${CYAN}${BOLD}════════════════════════════════════════${NC}"
     echo -e "${GREEN}${BOLD}   Installation completed!${NC}"
@@ -152,11 +144,6 @@ print_manual_run() {
 }
 
 main() {
-    # Redirect stdin to /dev/tty if running through pipe (curl | bash)
-    if [ ! -t 0 ]; then
-        exec < /dev/tty
-    fi
-    
     clear
     print_header
 
@@ -176,27 +163,7 @@ main() {
         exit 1
     fi
 
-    echo
-
-    read -p "$(echo -e ${GREEN}${BOLD}Run script now? [Y/n]:${NC} )" -n 1 -r
-    echo
-    echo
-
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        print_manual_run
-    else
-        if run_script; then
-            echo
-            print_success "Done!"
-            echo
-            print_info "To run again use:"
-            echo -e "  ${MAGENTA}cd $INSTALL_DIR && uv run main.py${NC}"
-            echo
-        else
-            echo
-            print_manual_run
-        fi
-    fi
+    print_final_message
 
     if [[ ! ":$PATH:" == *":$HOME/.cargo/bin:"* ]]; then
         echo
