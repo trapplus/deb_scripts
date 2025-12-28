@@ -82,4 +82,3 @@ class interactiveCLI:
                 print("Неверный ввод")
                 # overload
                 self.docker_interactive_run()
-

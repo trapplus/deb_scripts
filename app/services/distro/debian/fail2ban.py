@@ -1,11 +1,11 @@
 import time
 from subprocess import run
+
 from app.utils.subprocess_utils import run_commands
 
 
 class Fail2BanService:
     def __init__(self):
-
         self.path_to_jail_config = "/etc/fail2ban/jail.d/sshd.local"
         self.jail_str_config = """
 [sshd]
