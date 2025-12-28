@@ -6,7 +6,9 @@ if __os == "debian":
     from app.services.distro.debian.fail2ban import Fail2BanService
 elif __os == "arch":
     from app.services.distro.arch.fail2ban import Fail2BanService
-elif __os == "openwrt":  # TODO
+elif __os == "openwrt":
     from app.services.distro.wrt.fail2ban import Fail2BanService
 else:
     raise OSError("Unsuported distro!")
+
+fail2banservice = Fail2BanService()

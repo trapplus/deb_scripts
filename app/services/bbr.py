@@ -6,7 +6,9 @@ if __os == "debian":
     from app.services.distro.debian.bbr import BBRService
 elif __os == "arch":
     from app.services.distro.arch.bbr import BBRService
-elif __os == "openwrt":  # TODO
+elif __os == "openwrt":
     from app.services.distro.wrt.bbr import BBRService
 else:
-    raise OSError("Unsuported distro!")
+    raise OSError("Unsupported distro!")
+
+bbrservice = BBRService()

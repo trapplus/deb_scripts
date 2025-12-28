@@ -4,7 +4,6 @@ from platform import system
 from app.services.bbr import BBRService
 from app.services.docker import DockerService
 from app.services.fail2ban import Fail2BanService
-from app.services.uv import UVService
 
 
 class interactiveCLI:
@@ -12,13 +11,13 @@ class interactiveCLI:
         self.bbr = BBRService()
         self.docker = DockerService()
         self.fail2ban = Fail2BanService()
-        self.uv = UVService()
+
         self.system: str = system()
 
     def run_interactive_script(self) -> None:
         user_input: str = str(
             input(
-                "Выберите скрипт:\n0 - Выход\n1 - BBR\n2 - Docker\n3 - Fail2Ban\n4 - UV\nВыбор:"
+                "Выберите скрипт:\n0 - Выход\n1 - BBR\n2 - Docker\n3 - Fail2Ban\nВыбор:"
             )
         )
 
@@ -34,9 +33,6 @@ class interactiveCLI:
             case "3":
                 os.system("clear")
                 self.fail2ban_interactive_run()
-            case "4":
-                os.system("clear")
-                self.uv_interactive_run()
             case _:
                 os.system("clear")
                 print("Неверный ввод")
@@ -87,18 +83,3 @@ class interactiveCLI:
                 # overload
                 self.docker_interactive_run()
 
-    def uv_interactive_run(self):
-        print("UV manager\nВыберите действие:")
-        user_input = str(input("0 - Выход\n1 - Установить\n2 - Удалить\nВыбор:"))
-
-        match user_input:
-            case "0":  # undo step
-                self.run_interactive_script()
-            case "1":
-                self.uv.install()
-            case "2":
-                self.uv.uninstall()
-            case _:
-                print("Неверный ввод")
-                # overload
-                self.uv_interactive_run()
