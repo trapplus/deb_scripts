@@ -5,3 +5,31 @@ description = "DevOps Automation Scripts for all linux system"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring", 
+    "missing-function-docstring",
+    "too-few-public-methods",
+    "invalid-name",
+    "line-too-long",
+    "too-many-arguments",
+    "too-many-locals",
+    "too-many-branches",
+    "too-many-statements",
+    "broad-except",
+    "redefined-outer-name",
+    "import-error"
+]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.basic]
+good-names = ["i", "j", "k", "ex", "Run", "_", "f", "e", "fp"]
+
+[tool.pylint.design]
+max-args = 10
+max-locals = 20
+max-branches = 15
