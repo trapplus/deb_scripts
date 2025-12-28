@@ -21,7 +21,13 @@ disable = [
     "too-many-statements",
     "broad-except",
     "redefined-outer-name",
-    "import-error"
+    "import-error",
+    "no-else-return",
+    "import-outside-toplevel",
+    "subprocess-run-check",
+    "simplifiable-if-statement",
+    "too-many-return-statements",
+    "global-variable-not-assigned"
 ]
 
 [tool.pylint.format]
