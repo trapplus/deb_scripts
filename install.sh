@@ -57,7 +57,7 @@ install_uv() {
     fi
 
     print_step "Installing uv..."
-    if curl -fsSL "$UV_INSTALL_URL" | sh; then
+    if curl -fsSL "$UV_INSTALL_URL" | sh < /dev/null; then
         print_success "uv successfully installed"
         export PATH="$HOME/.cargo/bin:$PATH"
         return 0
@@ -72,16 +72,16 @@ setup_repository() {
         print_info "Repository already exists at $INSTALL_DIR"
         read -p "$(echo -e ${YELLOW}Update scripts? [Y/n]:${NC} )" -n 1 -r
         echo
-
+        
         if [[ $REPLY =~ ^[Nn]$ ]]; then
             print_info "Skipping update, using existing version"
             return 0
         fi
-
+        
         print_step "Updating repository..."
         cd "$INSTALL_DIR"
-
-        if git pull origin master; then
+        
+        if git pull origin master < /dev/null; then
             print_success "Repository updated successfully"
             return 0
         else
@@ -90,13 +90,13 @@ setup_repository() {
         fi
     else
         print_step "Cloning repository..."
-
+        
         if ! check_command git; then
             print_error "Git is not installed. Please install git and try again"
             exit 1
         fi
-
-        if git clone "$REPO_URL" "$INSTALL_DIR"; then
+        
+        if git clone "$REPO_URL" "$INSTALL_DIR" < /dev/null; then
             print_success "Repository cloned to $INSTALL_DIR"
             return 0
         else
@@ -108,10 +108,10 @@ setup_repository() {
 
 install_dependencies() {
     print_step "Installing dependencies..."
-
+    
     cd "$INSTALL_DIR"
-
-    if uv sync; then
+    
+    if uv sync < /dev/null; then
         print_success "Dependencies installed successfully"
         return 0
     else
@@ -122,9 +122,9 @@ install_dependencies() {
 
 run_script() {
     print_step "Running script..."
-
+    
     cd "$INSTALL_DIR"
-
+    
     if uv run main.py; then
         print_success "Script executed successfully"
         return 0
