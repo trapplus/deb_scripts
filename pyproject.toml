@@ -39,3 +39,8 @@ max-branches = 15
 # Ignore duplicate code warnings (common in multi-distro implementations)
 min-similarity-lines = 10
 ignore-imports = true
+
+[dependency-groups]
+dev = [
+    "pylint>=4.0.4",
+]
