@@ -40,9 +40,6 @@ def detect_distro() -> str:
             return "OpenWrt-snapshot"
         return "Alpine"
 
-    elif which("emerge"):
-        return "Gentoo"
-
     elif which("yum"):
         return "rhel-legacy"
 
