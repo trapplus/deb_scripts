@@ -1,39 +1,27 @@
-from shutil import which
-
 from app.utils.subprocess_utils import run_commands
+from app.services.docker import DockerService
 
 
-class DockerService:
-    def __init__(self) -> None:
-        self.status: bool = True if which("docker") else False
-
+class WrtDockerService(DockerService):
     def install(self):
+        print("Docker installation on OpenWrt is not recommended")
+        print("OpenWrt typically doesn't have enough resources for Docker")
+        print("Consider using LXC containers instead")
+        
         run_commands(
             [
-                ["apt", "update"],
-                ["apt", "install", "-y", "curl"],
-                ["curl", "-fsSL", "https://get.docker.com", "-o", "get-docker.sh"],
-                ["sh", "./get-docker.sh"],
-                ["rm", "./get-docker.sh"],
+                ["opkg", "update"],
+                ["opkg", "install", "dockerd", "docker-compose"],
+                ["/etc/init.d/dockerd", "enable"],
+                ["/etc/init.d/dockerd", "start"],
             ]
         )
-
+    
     def uninstall(self):
         run_commands(
             [
-                [
-                    "apt",
-                    "purge",
-                    "docker-ce",
-                    "docker-ce-cli",
-                    "containerd.io",
-                    "docker-buildx-plugin",
-                    "docker-compose-plugin",
-                    "docker-ce-rootless-extras",
-                ],
-                ["rm", "-rf", "/var/lib/docker"],
-                ["rm", "-rf", "/var/lib/containerd"],
-                ["rm", "/etc/apt/sources.list.d/docker.list"],
-                ["rm", "/etc/apt/keyrings/docker.asc"],
+                ["/etc/init.d/dockerd", "stop"],
+                ["/etc/init.d/dockerd", "disable"],
+                ["opkg", "remove", "dockerd", "docker-compose"],
             ]
         )

@@ -10,7 +10,7 @@ def isRootRunned() -> bool:
         bool - результат проверки, True: root, False: non root
     """
 
-    __uid: int = os.getuid()
+    __uid: int = os.geteuid()
 
     if __uid == 0:
         return True

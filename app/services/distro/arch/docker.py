@@ -1,28 +1,23 @@
-from shutil import which
-
 from app.utils.subprocess_utils import run_commands
+from app.services.docker import DockerService
 
 
-class DockerService:
-    def __init__(self) -> None:
-        self.status: bool = True if which("docker") else False
-
+class ArchDockerService(DockerService):
     def install(self):
         run_commands(
             [
-                ["pacman", "-Syu", "--noconfirm", "docker", "docker-compose"],
+                ["pacman", "-Sy", "--noconfirm", "docker", "docker-compose"],
                 ["systemctl", "enable", "docker"],
                 ["systemctl", "start", "docker"],
+                ["docker", "run", "hello-world"],
             ]
         )
-
+    
     def uninstall(self):
         run_commands(
             [
                 ["systemctl", "stop", "docker"],
                 ["systemctl", "disable", "docker"],
                 ["pacman", "-Rns", "--noconfirm", "docker", "docker-compose"],
-                ["rm", "-rf", "/var/lib/docker"],
-                ["rm", "-rf", "/var/lib/containerd"],
             ]
         )
